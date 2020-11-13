@@ -51,3 +51,44 @@ class Item:
 
     def __repr__(self):
         return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
+
+class BaseItem(Item):
+    def __init__(self, name, sell_in, quality):
+        Item.__init__(self, name=name, sell_in=sell_in, quality=quality)
+        self.conjured = name.startswith('Conjured')
+
+    def update_quality(self):
+        if self.conjured:
+            self.quality = self.quality - 2
+        else:
+            self.quality = self.quality - 1
+        self.quality = max(self.quality, 0)
+
+class BrieItem(Item):
+    def __init__(self, sell_in, quality):
+        Item.__init__(self, name=Item.ITEM_BRIE, sell_in=sell_in, quality=quality)
+
+    def update_quality(self):
+        self.quality = min(self.quality + 1, 50)
+
+class Sulfuras(Item):
+    def __init__(self, sell_in, quality):
+        Item.__init__(self, name=Item.ITEM_SULFURAS, sell_in=sell_in, quality=quality)
+
+    def update_quality(self):
+        self.quality = max(min(self.quality, 50), 0)
+
+class BackstagePass(Item):
+    def __init__(self, sell_in, quality):
+        Item.__init__(self, name=Item.ITEM_BACKSTAGE_PASS, sell_in=sell_in, quality=quality)
+
+    def update_quality(self):
+        if self.sell_in < 0:
+            self.quality = 0
+        elif self.sell_in < 6:
+            self.quality = self.quality + 3
+        elif self.sell_in < 11:
+            self.quality = self.quality + 2
+        else:
+            self.quality = self.quality + 1
+        self.quality = min(self.quality, 50)
