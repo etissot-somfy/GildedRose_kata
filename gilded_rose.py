@@ -37,6 +37,13 @@ class GildedRose(object):
 
 
 class Item:
+    ITEM_VEST = "+5 Dexterity Vest"
+    ITEM_BRIE = "Aged Brie"
+    ITEM_ELIXIR = "Elixir of the Mongoose"
+    ITEM_SULFURAS = "Sulfuras, Hand of Ragnaros"
+    ITEM_BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert"
+    ITEM_MANA_CAKE = "Conjured Mana Cake"
+
     def __init__(self, name, sell_in, quality):
         self.name = name
         self.sell_in = sell_in
