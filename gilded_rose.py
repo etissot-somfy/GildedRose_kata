@@ -7,34 +7,8 @@ class GildedRose(object):
 
     def update_quality(self):
         for item in self.items:
-            if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
-                if item.quality > 0:
-                    if item.name != "Sulfuras, Hand of Ragnaros":
-                        item.quality = item.quality - 1
-            else:
-                if item.quality < 50:
-                    item.quality = item.quality + 1
-                    if item.name == "Backstage passes to a TAFKAL80ETC concert":
-                        if item.sell_in < 11:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-                        if item.sell_in < 6:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-            if item.name != "Sulfuras, Hand of Ragnaros":
-                item.sell_in = item.sell_in - 1
-            if item.sell_in < 0:
-                if item.name != "Aged Brie":
-                    if item.name != "Backstage passes to a TAFKAL80ETC concert":
-                        if item.quality > 0:
-                            if item.name != "Sulfuras, Hand of Ragnaros":
-                                item.quality = item.quality - 1
-                    else:
-                        item.quality = item.quality - item.quality
-                else:
-                    if item.quality < 50:
-                        item.quality = item.quality + 1
-
+            item.update_quality()
+            item.update_sell_in()
 
 class Item:
     ITEM_VEST = "+5 Dexterity Vest"
@@ -52,7 +26,11 @@ class Item:
     def __repr__(self):
         return "%s, %s, %s" % (self.name, self.sell_in, self.quality)
 
-class BaseItem(Item):
+class ExpiringItem(Item):
+    def update_sell_in(self):
+        self.sell_in = self.sell_in - 1
+
+class BaseItem(ExpiringItem):
     def __init__(self, name, sell_in, quality):
         Item.__init__(self, name=name, sell_in=sell_in, quality=quality)
         self.conjured = name.startswith('Conjured')
@@ -64,7 +42,7 @@ class BaseItem(Item):
             self.quality = self.quality - 1
         self.quality = max(self.quality, 0)
 
-class BrieItem(Item):
+class BrieItem(ExpiringItem):
     def __init__(self, sell_in, quality):
         Item.__init__(self, name=Item.ITEM_BRIE, sell_in=sell_in, quality=quality)
 
@@ -76,9 +54,12 @@ class Sulfuras(Item):
         Item.__init__(self, name=Item.ITEM_SULFURAS, sell_in=sell_in, quality=quality)
 
     def update_quality(self):
-        self.quality = max(min(self.quality, 50), 0)
+        pass
+    
+    def update_sell_in(self):
+        pass
 
-class BackstagePass(Item):
+class BackstagePass(ExpiringItem):
     def __init__(self, sell_in, quality):
         Item.__init__(self, name=Item.ITEM_BACKSTAGE_PASS, sell_in=sell_in, quality=quality)
 
@@ -92,3 +73,4 @@ class BackstagePass(Item):
         else:
             self.quality = self.quality + 1
         self.quality = min(self.quality, 50)
+        

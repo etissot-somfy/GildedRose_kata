@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from gilded_rose import Item, GildedRose
+from gilded_rose import *
 from fixture import Fixture
 
 class GildedRoseTest(unittest.TestCase):
@@ -13,40 +13,34 @@ class GildedRoseTest(unittest.TestCase):
             self.assertEqual(item[0].name,item[1].name, "Bad name :{}".format(item[0].name))
             self.assertEqual(item[0].quality,item[1].quality, "Unexpected quality for : {}".format(item[0].name))
             self.assertEqual(item[0].sell_in,item[1].sell_in, "Unexpected Sell_in for : {}".format(item[0].name)) 
-
-    def test_foo(self):
-        items = [Item("foo", 0, 0)]
-        gilded_rose = GildedRose(items)
-        gilded_rose.update_quality()
-        self.assertEqual("foo", items[0].name)
-    
+  
     def test_backstage_passes_basic(self):
-        backstage_pass = Item(Item.ITEM_BACKSTAGE_PASS, sell_in=20, quality=12)
+        backstage_pass = BackstagePass(sell_in=20, quality=12)
         rose = GildedRose([backstage_pass])
         rose.update_quality()
         self.assertEqual(backstage_pass.sell_in, 19, "sell_in")
         self.assertEqual(backstage_pass.quality, 13, "quality")
 
     def test_backstage_passes_less_than_10(self):
-        backstage_pass = Item(Item.ITEM_BACKSTAGE_PASS, sell_in=9, quality=12)
+        backstage_pass = BackstagePass(sell_in=9, quality=12)
         rose = GildedRose([backstage_pass])
         rose.update_quality()
         self.assertEqual(backstage_pass.sell_in, 8, "sell_in")
         self.assertEqual(backstage_pass.quality, 14, "quality")
 
     def test_backstage_passes_exactly_10(self):
-        backstage_pass = Item(Item.ITEM_BACKSTAGE_PASS, sell_in=10, quality=12)
+        backstage_pass = BackstagePass(sell_in=10, quality=12)
         rose = GildedRose([backstage_pass])
         rose.update_quality()
         self.assertEqual(backstage_pass.sell_in, 9, "sell_in")
         self.assertEqual(backstage_pass.quality, 14, "quality")
 
     def test_backstage_passes_less_than_5(self):
-        backstage_pass = Item(Item.ITEM_BACKSTAGE_PASS, sell_in=4, quality=12)
+        backstage_pass = BackstagePass(sell_in=4, quality=12)
         rose = GildedRose([backstage_pass])
         rose.update_quality()
         self.assertEqual(backstage_pass.sell_in, 3, "sell_in")
         self.assertEqual(backstage_pass.quality, 15, "quality")
-
+        
 if __name__ == '__main__':
     unittest.main()
